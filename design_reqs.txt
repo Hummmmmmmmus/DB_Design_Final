@@ -1,0 +1,19 @@
+Users
+
+Customers: make payments, search all products and info, make orders, make account changes
+           (addresses, name, cc info, balance), 
+Staff: modify/create products, change product availability, query cust info, process orders 
+       (name, addr, salary, title)
+
+Store
+
+Products: (type, brand, size, description, price)
+Warehouse: (address, capacity)
+Stock: (num products at each warehouse)
+Orders: (
+    (product, quantity), 
+    status(issued, set, or recieved),
+    (Delivery plan (express or standard), deliv price, deliv date, ship date)
+)
+Suppliers: (supplier name, address, items(item id, supp cost))
+
