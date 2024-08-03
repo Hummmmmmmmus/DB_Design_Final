@@ -6,28 +6,17 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Badge from '@mui/material/Badge';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { CartContext } from '../CartContext';
+import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '../UserContext';
 
 function Header() {
-    const { cart } = useContext(CartContext);
     const { user, loggedIn, setUser, setLoggedIn } = useContext(UserContext);
     const navigate = useNavigate();
-    const location = useLocation();
-
-    React.useEffect(() => {
-        if ((!loggedIn || user.role !== 'staff') && location.pathname.startsWith('/staff')) {
-            navigate('/');
-        }
-    }, [user.role, loggedIn, location, navigate]);
-
-    const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
 
     const handleLogout = () => {
-        setUser({ role: 'customer' });
+        setUser(null);
         setLoggedIn(false);
-        navigate('/');
+        navigate('/login');
     };
 
     return (
@@ -39,20 +28,33 @@ function Header() {
                     </Link>
                 </Typography>
                 {loggedIn && user.role === 'staff' && (
-                    <Link to="/staff" style={{ color: 'inherit', textDecoration: 'none' }}>
-                        <Button color="inherit">
+                    <>
+                        <Button color="inherit" component={Link} to="/staff">
                             Staff Dashboard
                         </Button>
-                    </Link>
+                        <Button color="inherit" component={Link} to="/staff/manage-products">
+                            Manage Products
+                        </Button>
+                        <Button color="inherit" component={Link} to="/staff/add-product">
+                            Add Product
+                        </Button>
+                        <Button color="inherit" component={Link} to="/staff/add-stock">
+                            Add Stock
+                        </Button>
+                    </>
                 )}
                 {loggedIn ? (
-                    <Button color="inherit" onClick={handleLogout}>Logout</Button>
+                    <Button color="inherit" onClick={handleLogout}>
+                        Logout
+                    </Button>
                 ) : (
-                    <Button color="inherit" onClick={() => navigate('/login')}>Login</Button>
+                    <Button color="inherit" onClick={() => navigate('/login')}>
+                        Login
+                    </Button>
                 )}
                 <Link to="/cart" style={{ color: 'inherit' }}>
                     <IconButton color="inherit">
-                        <Badge badgeContent={totalItems} color="secondary">
+                        <Badge badgeContent={0} color="secondary"> {/* Update with cart items count */}
                             <ShoppingCartIcon />
                         </Badge>
                     </IconButton>

@@ -12,6 +12,7 @@ import AddProduct from './pages/AddProduct';
 import ManageProducts from './pages/ManageProducts';
 import AddStock from './pages/AddStock';
 import LoginPage from './pages/LoginPage';
+import RegisterUser from './pages/RegisterUser';
 import { UserContext } from './UserContext';
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
                         <Route path="/cart" element={<CartPage />} />
                         <Route path="/checkout" element={<CheckoutPage />} />
                         <Route path="/login" element={<LoginPage />} />
+                        <Route path="/register" element={<RegisterUser />} />
                         {loggedIn && user.role === 'staff' && (
                             <>
                                 <Route path="/staff" element={<StaffDashboard />} />

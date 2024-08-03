@@ -1,11 +1,10 @@
-// src/pages/AddStock.js
 import React, { useState } from 'react';
-import axios from 'axios';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 function AddStock() {
@@ -16,17 +15,20 @@ function AddStock() {
 
     const handleAddStock = async () => {
         try {
-            await axios.post('https://localhost:7047/api/Stocks', {
-                prod_ID: parseInt(productId),
-                ware_ID: parseInt(warehouseId),
-                count: parseInt(quantity)
+            const response = await axios.post('https://localhost:7047/api/Employees/stock', {
+                prod_ID: parseInt(productId, 10),
+                ware_ID: parseInt(warehouseId, 10),
+                count: parseInt(quantity, 10)
             });
+
+            console.log('Stock added:', response.data);
             setProductId('');
             setWarehouseId('');
             setQuantity('');
             navigate('/staff');
         } catch (error) {
-            console.error('Error adding stock:', error);
+            console.error('Error adding stock:', error.response.data);
+            alert('Error adding stock: ' + JSON.stringify(error.response.data));
         }
     };
 
@@ -62,6 +64,7 @@ function AddStock() {
                         variant="outlined"
                         fullWidth
                         margin="normal"
+                        type="number"
                         value={quantity}
                         onChange={(e) => setQuantity(e.target.value)}
                     />
