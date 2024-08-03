@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+// src/pages/HomePage.js
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import ProductCard from '../components/ProductCard';
@@ -10,14 +12,22 @@ import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';
 import Box from '@mui/material/Box';
 
-const products = [
-    { id: 1, name: 'Product 1', price: '$10', description: 'This is Product 1' },
-    { id: 2, name: 'Product 2', price: '$20', description: 'This is Product 2' },
-    { id: 3, name: 'Product 3', price: '$30', description: 'This is Product 3' },
-];
-
 function HomePage() {
+    const [products, setProducts] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const response = await axios.get('https://localhost:7047/api/Products');
+                setProducts(response.data);
+            } catch (error) {
+                console.error('Error fetching products:', error);
+            }
+        };
+
+        fetchProducts();
+    }, []);
 
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
@@ -65,7 +75,7 @@ function HomePage() {
             <Grid container spacing={4}>
                 {filteredProducts.length > 0 ? (
                     filteredProducts.map(product => (
-                        <Grid item key={product.id} xs={12} sm={6} md={4}>
+                        <Grid item key={product.prod_ID} xs={12} sm={6} md={4}>
                             <ProductCard product={product} />
                         </Grid>
                     ))

@@ -1,4 +1,6 @@
+// src/pages/AddProduct.js
 import React, { useState } from 'react';
+import axios from 'axios';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
@@ -12,15 +14,20 @@ function AddProduct() {
     const [productDescription, setProductDescription] = useState('');
     const navigate = useNavigate();
 
-    const handleAddProduct = () => {
-        console.log({
-            name: productName,
-            price: productPrice,
-            description: productDescription
-        });
-        setProductName('');
-        setProductPrice('');
-        setProductDescription('');
+    const handleAddProduct = async () => {
+        try {
+            await axios.post('https://localhost:7047/api/Products', {
+                name: productName,
+                price: parseFloat(productPrice),
+                description: productDescription
+            });
+            setProductName('');
+            setProductPrice('');
+            setProductDescription('');
+            navigate('/staff');
+        } catch (error) {
+            console.error('Error adding product:', error);
+        }
     };
 
     const handleCancel = () => {

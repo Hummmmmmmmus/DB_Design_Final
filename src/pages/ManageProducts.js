@@ -1,37 +1,56 @@
-import React, { useState } from 'react';
+// src/pages/ManageProducts.js
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import { useNavigate } from 'react-router-dom';
 
-const initialProducts = [
-    { id: 1, name: 'Product 1', price: '$10', description: 'This is Product 1' },
-    { id: 2, name: 'Product 2', price: '$20', description: 'This is Product 2' },
-    { id: 3, name: 'Product 3', price: '$30', description: 'This is Product 3' },
-];
-
 function ManageProducts() {
-    const [products, setProducts] = useState(initialProducts);
+    const [products, setProducts] = useState([]);
     const [editingProduct, setEditingProduct] = useState(null);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const response = await axios.get('https://localhost:7047/api/Products');
+                setProducts(response.data);
+            } catch (error) {
+                console.error('Error fetching products:', error);
+            }
+        };
+
+        fetchProducts();
+    }, []);
 
     const handleEditProduct = (product) => {
         setEditingProduct(product);
     };
 
-    const handleDeleteProduct = (productId) => {
-        setProducts(products.filter(product => product.id !== productId));
+    const handleDeleteProduct = async (productId) => {
+        try {
+            await axios.delete(`https://localhost:7047/api/Products/${productId}`);
+            setProducts(products.filter(product => product.prod_ID !== productId));
+        } catch (error) {
+            console.error('Error deleting product:', error);
+        }
     };
 
-    const handleSaveProduct = () => {
-        setProducts(products.map(product =>
-            product.id === editingProduct.id ? editingProduct : product
-        ));
-        setEditingProduct(null);
+    const handleSaveProduct = async () => {
+        try {
+            await axios.put(`https://localhost:7047/api/Products/${editingProduct.prod_ID}`, editingProduct);
+            setProducts(products.map(product =>
+                product.prod_ID === editingProduct.prod_ID ? editingProduct : product
+            ));
+            setEditingProduct(null);
+        } catch (error) {
+            console.error('Error saving product:', error);
+        }
     };
 
     const handleCancel = () => {
@@ -50,7 +69,7 @@ function ManageProducts() {
                 </Typography>
                 <Grid container spacing={3}>
                     {products.map(product => (
-                        <Grid item xs={12} key={product.id}>
+                        <Grid item xs={12} key={product.prod_ID}>
                             <Paper style={{ padding: '16px', marginBottom: '8px' }}>
                                 <Grid container spacing={2}>
                                     <Grid item xs={6}>
@@ -71,7 +90,7 @@ function ManageProducts() {
                                         <Button
                                             variant="contained"
                                             color="secondary"
-                                            onClick={() => handleDeleteProduct(product.id)}
+                                            onClick={() => handleDeleteProduct(product.prod_ID)}
                                         >
                                             Delete
                                         </Button>

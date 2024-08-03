@@ -1,3 +1,4 @@
+// src/components/ProductCard.js
 import React, { useContext } from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -27,7 +28,7 @@ function ProductCard({ product }) {
                         {product.description}
                     </Typography>
                     <Typography variant="h6" color="text.primary">
-                        {product.price}
+                        ${product.price}
                     </Typography>
                     <Button variant="contained" color="primary" onClick={() => addToCart(product)}>
                         Add to Cart

@@ -1,4 +1,6 @@
+// src/pages/AddStock.js
 import React, { useState } from 'react';
+import axios from 'axios';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
@@ -12,17 +14,20 @@ function AddStock() {
     const [quantity, setQuantity] = useState('');
     const navigate = useNavigate();
 
-    const handleAddStock = () => {
-        // For now, we'll just log the stock details to the console
-        console.log({
-            productId,
-            warehouseId,
-            quantity
-        });
-        // Clear the form
-        setProductId('');
-        setWarehouseId('');
-        setQuantity('');
+    const handleAddStock = async () => {
+        try {
+            await axios.post('https://localhost:7047/api/Stocks', {
+                prod_ID: parseInt(productId),
+                ware_ID: parseInt(warehouseId),
+                count: parseInt(quantity)
+            });
+            setProductId('');
+            setWarehouseId('');
+            setQuantity('');
+            navigate('/staff');
+        } catch (error) {
+            console.error('Error adding stock:', error);
+        }
     };
 
     const handleCancel = () => {
